@@ -1,10 +1,11 @@
 ﻿using MiddleLayer.Enum;
+using MiddleLayer.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MiddleLayer
 {
-    public class CustomerBase
+    public class CustomerBase : ICustomer
     {
         [Key]
         public int Id { get; set; }
@@ -13,7 +14,7 @@ namespace MiddleLayer
         public decimal BillAmount { get; set; }
         public DateTime BillDate { get; set; }
         public string? Address { get; set; }
-        public virtual CustomerType CustType { get; set; }
+        public CustomerType CustType { get; set; }
         public virtual void Validate()
         {
             throw new Exception("Not implemented");
@@ -22,7 +23,6 @@ namespace MiddleLayer
 
     public class Customer : CustomerBase
     {
-        override public CustomerType CustType { get; set; } = CustomerType.Customer;
         public override void Validate()
         {
             if (string.IsNullOrEmpty(CustomerName))
@@ -50,7 +50,6 @@ namespace MiddleLayer
 
     public class Lead : CustomerBase
     {
-        override public CustomerType CustType { get; set; } = CustomerType.Lead;
         public override void Validate()
         {
             if (string.IsNullOrEmpty(CustomerName))

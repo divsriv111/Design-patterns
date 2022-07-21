@@ -1,7 +1,7 @@
 using API;
+using API.MiddleLayer;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.EntityFrameworkCore;
-using MiddleLayer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,10 +42,10 @@ app.MapPost("/AddCustomer", async (CustomerBase customer, CustomerDB db) =>
     user.CustomerName = customer.CustomerName;
     user.BillDate = customer.BillDate;
     user.BillAmount = customer.BillAmount;
-
+    user.CustType = customer.CustType;
     user.Validate();
 
-    await db.User.AddAsync(user);
+    await db.User.AddAsync((CustomerBase)user);
     await db.SaveChangesAsync();
     return user;
 })
