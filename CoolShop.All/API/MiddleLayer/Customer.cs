@@ -1,7 +1,6 @@
 ﻿using API.Enum;
 using API.Interfaces;
 using System.ComponentModel.DataAnnotations;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Model;
 
 namespace API.MiddleLayer
 {
@@ -36,7 +35,7 @@ namespace API.MiddleLayer
 
     public class Customer : CustomerBase
     {
-        public Customer(IValidation<ICustomer> validation):base(validation)
+        public Customer(IValidation<ICustomer> validation) : base(validation)
         {
         }
     }

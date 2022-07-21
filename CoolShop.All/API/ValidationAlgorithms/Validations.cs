@@ -1,7 +1,4 @@
 ﻿using API.Interfaces;
-using API.MiddleLayer;
-using System.Net;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Model;
 
 namespace API.ValidationAlgorithms
 {

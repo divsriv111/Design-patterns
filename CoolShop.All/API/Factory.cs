@@ -37,7 +37,7 @@ namespace API
 
                 _users.RegisterType<ICustomer, Customer>
                     (CustomerType.Customer.ToString(), new InjectionConstructor(new CustomerValidationAll()));
-                
+
                 _users.RegisterType<ICustomer, Lead>
                     (CustomerType.Lead.ToString(), new InjectionConstructor(new LeadValidation()));
             }
