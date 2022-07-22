@@ -1,4 +1,5 @@
 using API;
+using API.Interfaces;
 using API.MiddleLayer;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddDbContext<CustomerDB>(opt => opt.UseInMemoryDatabase("CustomerList"));
+//builder.Services.AddDbContext<CustomerDB>(opt => opt.UseInMemoryDatabase("CustomerList"));
 //builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -28,15 +29,15 @@ app.UseHttpsRedirection();
 app.MapGet("/", () => "Hello World!");
 
 //GET API: to get all customers
-app.MapGet("/GetAllCustomers", async (CustomerDB db) =>
-{
-    return await db.User.ToListAsync();
-});
+//app.MapGet("/GetAllCustomers", async (CustomerDB db) =>
+//{
+//    return await db.User.ToListAsync();
+//});
 
 //Post method
-app.MapPost("/AddCustomer", async (CustomerBase customer, CustomerDB db) =>
+app.MapPost("/AddCustomer", async (CustomerBase customer) =>
 {
-    var user = Factory.Create(customer.CustType);
+    var user = Factory<ICustomer>.Create(customer.CustType.ToString());
     user.Address = customer.Address;
     user.PhoneNumber = customer.PhoneNumber;
     user.CustomerName = customer.CustomerName;
@@ -45,8 +46,6 @@ app.MapPost("/AddCustomer", async (CustomerBase customer, CustomerDB db) =>
     user.CustType = customer.CustType;
     user.Validate();
 
-    await db.User.AddAsync((CustomerBase)user);
-    await db.SaveChangesAsync();
     return user;
 })
 .WithName("AddCustomer")

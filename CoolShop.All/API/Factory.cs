@@ -1,5 +1,7 @@
-﻿using API.Enum;
+﻿using API.AdoDotnetDAL;
+using API.Enum;
 using API.Interfaces;
+using API.Interfaces.DAL;
 using API.MiddleLayer;
 using API.ValidationAlgorithms;
 using Microsoft.Practices.Unity;
@@ -7,45 +9,40 @@ using Microsoft.Practices.Unity;
 namespace API
 {
     //Design pattern: Simple factory Pattern 
-    public static class Factory
+    public static class Factory<AnyType>
     {
-        private static IUnityContainer _users = null;
-        private static int _count;
-
-        static Factory()
-        {
-            _count = 1;
-        }
-        public static ICustomer Create(CustomerType type)
+        private static IUnityContainer _objs = null;
+        
+        public static AnyType Create(string type)
         {
             //Design pattern: Lazy loading (load only when you have use of it)
             //Point 1: lazy loading from scratch
-            //if (_users.Count == 0)
+            //if (_objs.Count == 0)
             //{
-            //    _users.Add(CustomerType.Customer, new Customer());
-            //    _users.Add(CustomerType.Lead, new Lead());
+            //    _objs.Add(CustomerType.Customer, new Customer());
+            //    _objs.Add(CustomerType.Lead, new Lead());
             //}
 
             //Point 2: lazy loading with c# Lazy feature
-            //Lazy<Dictionary<CustomerType, CustomerBase>> _users =
+            //Lazy<Dictionary<CustomerType, CustomerBase>> _objs =
             //              new Lazy<Dictionary<CustomerType, CustomerBase>>();
 
             //Point 3: using some framework like unity- recommended
-            if (_users == null)
+            if (_objs == null)
             {
-                _users = new UnityContainer();
+                _objs = new UnityContainer();
 
-                _users.RegisterType<ICustomer, Customer>
+                _objs.RegisterType<ICustomer, Customer>
                     (CustomerType.Customer.ToString(), new InjectionConstructor(new CustomerValidationAll()));
 
-                _users.RegisterType<ICustomer, Lead>
+                _objs.RegisterType<ICustomer, Lead>
                     (CustomerType.Lead.ToString(), new InjectionConstructor(new LeadValidation()));
+
+                _objs.RegisterType<IDal<ICustomer>, CustomerDAL>("ADODal");
             }
 
             //Design pattern: RIP (Replace IF by polymorphism)
-            var user = _users.Resolve<ICustomer>(type.ToString());
-            user.Id = _count;
-            _count++;
+            var user = _objs.Resolve<AnyType>(type.ToString());
             return user;
         }
     }

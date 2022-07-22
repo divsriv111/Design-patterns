@@ -4,7 +4,7 @@ namespace API.Interfaces
 {
     public interface ICustomer
     {
-        int Id { get; set; }
+        //int Id { get; set; }
         string? CustomerName { get; set; }
         string? PhoneNumber { get; set; }
         decimal BillAmount { get; set; }
